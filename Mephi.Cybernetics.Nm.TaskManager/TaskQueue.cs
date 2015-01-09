@@ -11,7 +11,9 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 {
     public class TaskQueue
     {
+        /// <summary> Невыполненые задания </summary>
         private ObservableCollection<TaskRE> _pendingTaskList;
+        /// <summary> Выполненые задания </summary>
         private ObservableCollection<TaskRE> _completedTaskList;
 
         private ThreadManager _threadManager;

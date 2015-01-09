@@ -50,7 +50,7 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
         public void Invoke(TaskRE task)
         {
-            var mre = new ManualResetEvent(false);
+            /*var mre = new ManualResetEvent(false);
             mre.WaitOne();
 
             // полезная логика
@@ -59,7 +59,7 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
 
             // манагере:
-            mre.Set();
+            mre.Set();*/
 
             State = State.Free;
             Task = task;
@@ -67,7 +67,6 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             {
                 this.State = State.InProcess;
                 Task.ResultValue.Value = Task.Func.FuncDelegate.DynamicInvoke(Task.Arguments);
-
                 this.State = State.Done;
 
             });

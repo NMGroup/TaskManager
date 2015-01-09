@@ -10,3 +10,9 @@ D:\Mephi\chm\chm\ThreadManager\ThreadManager\bin\Debug\Mephi.Cybernetics.Nm.Task
 D:\Mephi\chm\chm\ThreadManager\ThreadManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.csprojResolveAssemblyReference.cache
 D:\Mephi\chm\chm\ThreadManager\ThreadManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.exe
 D:\Mephi\chm\chm\ThreadManager\ThreadManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.pdb
+D:\Mephi\TaskManager\Mephi.Cybernetics.Nm.TaskManager\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.exe.config
+D:\Mephi\TaskManager\Mephi.Cybernetics.Nm.TaskManager\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.exe
+D:\Mephi\TaskManager\Mephi.Cybernetics.Nm.TaskManager\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.pdb
+D:\Mephi\TaskManager\Mephi.Cybernetics.Nm.TaskManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.csprojResolveAssemblyReference.cache
+D:\Mephi\TaskManager\Mephi.Cybernetics.Nm.TaskManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.exe
+D:\Mephi\TaskManager\Mephi.Cybernetics.Nm.TaskManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.pdb

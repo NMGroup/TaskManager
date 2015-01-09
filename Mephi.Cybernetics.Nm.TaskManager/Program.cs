@@ -21,6 +21,17 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             { 
                 return k+l;
             }));
+            Console.WriteLine("end");
+            TaskRE checkAction = new TaskRE(
+               name: String.Format("taskAction"),
+               arguments: new object[]{p},
+               dlgt: new Action<int>((int k) =>
+               {
+                   ++k;
+                   return;
+               })
+            );
+
             tq.AddTask(zTaskRe);
             while (!zTaskRe.ResultValue.HasValue());
             var j = zTaskRe.ResultValue.Value;

@@ -41,6 +41,10 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             Name = name;
             _arguments = arguments;
             Func = new FuncInfo(dlgt);
+            if (arguments.Length != Func.Arity)
+            {
+                throw new ArgumentOutOfRangeException("arguments");
+            }
             for (int i = 0; i < _arguments.Length; i++)
             {
                 if (Func.ArgumentsType[i] != _arguments[i].GetType()) throw new ArgumentException("delegate argument");

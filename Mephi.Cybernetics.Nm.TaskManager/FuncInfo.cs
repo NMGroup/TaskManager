@@ -46,17 +46,17 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
         public FuncInfo(Delegate inpDelegate)
         {
-            if (inpDelegate is Action)
+            if (inpDelegate.Method.ReturnType == typeof (void))
             {
                 this._returnType = inpDelegate.Method.ReturnType;
                 this._argumentsType = inpDelegate.GetType().GetGenericArguments();
-                this._arity = _argumentsType.Length - 1;
+                this._arity = _argumentsType.Length;
             }
             else
             {
                 this._argumentsType = inpDelegate.GetType().GetGenericArguments();
                 this._returnType = this._argumentsType.Last();
-                this._arity = _argumentsType.Length - 2;
+                this._arity = _argumentsType.Length - 1;
             }
             FuncDelegate = inpDelegate;
         }

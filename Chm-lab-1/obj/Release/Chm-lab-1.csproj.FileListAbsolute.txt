@@ -1,0 +1,2 @@
+D:\Mephi\chm\chm\Chm-lab-1\Chm-lab-1\obj\Release\Interop.LCC11.dll
+D:\Mephi\chm\chm\Chm-lab-1\Chm-lab-1\obj\Release\Chm-lab-1.csproj.ResolveComReference.cache

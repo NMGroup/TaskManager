@@ -1,0 +1,12 @@
+D:\Mephi\chm\chm\THREADMANAGERWITH21ANDHOE\THREADMANAGERWITH21ANDHOE\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.csprojResolveAssemblyReference.cache
+D:\Mephi\chm\chm\THREADMANAGERWITH21ANDHOE\THREADMANAGERWITH21ANDHOE\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.exe.config
+D:\Mephi\chm\chm\THREADMANAGERWITH21ANDHOE\THREADMANAGERWITH21ANDHOE\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.exe
+D:\Mephi\chm\chm\THREADMANAGERWITH21ANDHOE\THREADMANAGERWITH21ANDHOE\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.pdb
+D:\Mephi\chm\chm\THREADMANAGERWITH21ANDHOE\THREADMANAGERWITH21ANDHOE\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.exe
+D:\Mephi\chm\chm\THREADMANAGERWITH21ANDHOE\THREADMANAGERWITH21ANDHOE\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.pdb
+D:\Mephi\chm\chm\ThreadManager\ThreadManager\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.exe.config
+D:\Mephi\chm\chm\ThreadManager\ThreadManager\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.exe
+D:\Mephi\chm\chm\ThreadManager\ThreadManager\bin\Debug\Mephi.Cybernetics.Nm.TaskManager.pdb
+D:\Mephi\chm\chm\ThreadManager\ThreadManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.csprojResolveAssemblyReference.cache
+D:\Mephi\chm\chm\ThreadManager\ThreadManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.exe
+D:\Mephi\chm\chm\ThreadManager\ThreadManager\obj\Debug\Mephi.Cybernetics.Nm.TaskManager.pdb

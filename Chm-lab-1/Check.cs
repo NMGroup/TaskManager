@@ -10,14 +10,15 @@ using System.Threading.Tasks;
 
 namespace Chm_lab_1
 {
+
     class Check
     {
         
         static void Main(string[] args)
         {
-            Matrix m1 = new Matrix(25,25);
+            Matrix m1 = new Matrix(50,50);
             m1.fillRandom();
-            Matrix m2 = new Matrix(25, 25);
+            Matrix m2 = new Matrix(50, 50);
             m2.fillRandom();
 
 

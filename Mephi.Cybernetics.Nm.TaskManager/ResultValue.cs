@@ -17,7 +17,10 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             {
                 return _value;
             }
-            set { _value = value; }
+            set
+            {
+                _value = value;
+            }
         }
 
         public bool TryGetValue(out Object v)

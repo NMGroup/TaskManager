@@ -21,6 +21,8 @@ namespace Mephi.Cybernetics.Nm.TaskManager
         private Thread _thread;
         private State _state;
 
+
+
         public TaskRE Task { get; private set; }
         public int ID { get; private set; }
 
@@ -61,19 +63,21 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             // манагере:
             mre.Set();*/
 
+
             State = State.Free;
             Task = task;
-            _thread = new Thread(() =>
-            {
-                this.State = State.InProcess;
-                Task.ResultValue.Value = Task.Func.FuncDelegate.DynamicInvoke(Task.Arguments);
-                this.State = State.Done;
+            _thread = new Thread(
+            () =>
+                {
+                    this.State = State.InProcess;
+                    Task.ResultValue.Value = Task.Func.FuncDelegate.DynamicInvoke(Task.Arguments);
+                    this.State = State.Done;
 
-            });
-            
+                }
+            );
             _thread.Start();
-            
-            
+
+
         }
     }
 }

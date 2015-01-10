@@ -18,7 +18,8 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             TaskQueue tq = new TaskQueue();
             TaskRE zTaskRe = new TaskRE(name:String.Format("task1"), arguments: new object[]{p,o}, 
             dlgt: new Func<int,int, int>((int k,int l) => 
-            { 
+            {
+
                 return k+l;
             }));
             Console.WriteLine("end");
@@ -28,6 +29,7 @@ namespace Mephi.Cybernetics.Nm.TaskManager
                dlgt: new Action<int>((int k) =>
                {
                    ++k;
+
                    return;
                })
             );
@@ -40,6 +42,7 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             TaskRE yTaskRe = new TaskRE(String.Format("task1"), arguments: new object[] { p, o },
             dlgt: new Func<int, int, int>((int k, int l) =>
             {
+
                 return k + l;
             }));
             tq.AddTask(yTaskRe);

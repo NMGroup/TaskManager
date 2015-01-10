@@ -16,12 +16,18 @@ namespace Mephi.Cybernetics.Nm.TaskManager
         private ObservableCollection<ThreadForTM> _busyThreads;
         private ObservableCollection<ThreadForTM> _freeThreads;
 
+        private ManualResetEvent _busyThreadManagerIndicator = new ManualResetEvent(true);
+
         const int quantityOfThreads = 50;
 
         public ObservableCollection<TaskRE> CurrentTaskList
         {
-            get { return _currentTaskList; }
+            get
+            {
+                return _currentTaskList;
+            }
         }
+
 
         #region Ctor
 
@@ -46,34 +52,35 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
         public bool TryGetThread( TaskRE task )
         {
-            lock (this)
+            _busyThreadManagerIndicator.WaitOne();
+            _busyThreadManagerIndicator.Reset();
+            if (_freeThreads.Count != 0)
             {
-                if (_freeThreads.Count != 0)
-                {
-                    ThreadForTM freeThread = _freeThreads[0];
-                    _currentTaskList.Add(task);
-                    _busyThreads.Add(freeThread);
-                    _freeThreads.Remove(freeThread);
-                    freeThread.Invoke(task);
-                    return true;
-                }
+                ThreadForTM freeThread = _freeThreads[0];
+                _currentTaskList.Add(task);
+                _busyThreads.Add(freeThread);
+                _freeThreads.Remove(freeThread);
+                freeThread.Invoke(task);
+                _busyThreadManagerIndicator.Set();
+                return true;
             }
+            _busyThreadManagerIndicator.Set();
             return false;
+            
         }
 
         private void OnStateThreadForTMCHanged(ThreadForTM e)
         {
-            lock (e)
+            _busyThreadManagerIndicator.WaitOne();
+            _busyThreadManagerIndicator.Reset();
+            if (e.State == State.Done)
             {
-                if (e.State == State.Done)
-                {
-                    _freeThreads.Add(e);
-                    _busyThreads.Remove(e);
-                    _currentTaskList.Remove(e.Task);
-                    Console.WriteLine("я готов");
-                }
+                _busyThreads.Remove(e);
+                _freeThreads.Add(e);
+                _currentTaskList.Remove(e.Task);
+                Console.WriteLine("я готов");
             }
-
+            _busyThreadManagerIndicator.Set();
         }
 
     }

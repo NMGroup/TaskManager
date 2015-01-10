@@ -18,43 +18,47 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
         private ThreadManager _threadManager;
 
-        public TaskRE GetTask()
-        {
-            var popedTask = _pendingTaskList[0];
-            _pendingTaskList.RemoveAt(0);
-            return popedTask;
-        }
-
-        public void AddTask(TaskRE task)
-        {
-            //if (!IsTaskDone(task))
-                _pendingTaskList.Add(task);
-        }
-
-        public void OnPendingCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            lock (_pendingTaskList)
-            {
-                if (e.NewItems != null)
-                {
-                    var t = _pendingTaskList[0];
-                    if (_threadManager.TryGetThread(t))
-                        _pendingTaskList.RemoveAt(0);
-                }
-            }
-        }
-
-        public void OnCompletedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public bool TryGetTask(out TaskRE task)
         {
             lock (_pendingTaskList)
             {
                 if (_pendingTaskList.Count != 0)
                 {
-                    var t = _pendingTaskList[0];
-                    if (_threadManager.TryGetThread(t))
-                        _pendingTaskList.RemoveAt(0);
+                    var popedTask = _pendingTaskList[0];
+                    _pendingTaskList.RemoveAt(0);
+                    task = popedTask;
+                    return true;
+                }
+                else
+                {
+                    task = null;
+                    return false;
                 }
             }
+        }
+
+        public void AddTask(TaskRE task)
+        {
+            //if (!IsTaskDone(task))
+            lock (_pendingTaskList)
+            {
+                _pendingTaskList.Add(task);
+            }
+
+        }
+
+        public void OnPendingCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            TaskRE t = null;
+            if (TryGetTask(out t))
+                _threadManager.TryGetThread(t);
+        }
+
+        public void OnCompletedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            TaskRE t = null;
+            if (TryGetTask(out t))
+                _threadManager.TryGetThread(t);
         }
 
 

@@ -156,7 +156,7 @@ namespace Chm_lab_1
             Matrix elementaryMatrix = new Matrix(height, width);
 
             Matrix Q = new Matrix(height,width);
-            Q.fillOnesDiag();
+            Q.FillOnesDiag();
 
             int columnCount = 0;
 
@@ -177,7 +177,7 @@ namespace Chm_lab_1
                 tempUP = new Matrix(height, width);
 
                 elementaryMatrix = new Matrix(height, width);
-                elementaryMatrix.fillOnesDiag();
+                elementaryMatrix.FillOnesDiag();
 
                 for (int i = columnCount; i < height; ++i)
                 {
@@ -316,7 +316,7 @@ namespace Chm_lab_1
                         readyToWork = true;
                         ++iterationCount;
                         Q = new Matrix(height, width);
-                        Q.fillOnesDiag();
+                        Q.FillOnesDiag();
                         columnCount = 0;
                     }
                     
@@ -337,8 +337,8 @@ namespace Chm_lab_1
             timeCount = 0;
             iterationCount = 0;
 
-            Matrix matrixA = inpA.createCopy();
-            Matrix vectorb = inpb.createCopy();
+            Matrix matrixA = inpA.CreateCopy();
+            Matrix vectorb = inpb.CreateCopy();
 
             Matrix lyambdaVector = QRAlgorithm(inpA, out timeCount, out iterationCount);
             double maxLyambda = -1;
@@ -377,7 +377,7 @@ namespace Chm_lab_1
 
             matrixA = Matrix.multiply(matrixA.transparent(), matrixA);
             vectorb = Matrix.multiply(matrixA.transparent(), vectorb);
-            Matrix vectorX = vectorb.createCopy();
+            Matrix vectorX = vectorb.CreateCopy();
             
 
 

@@ -23,7 +23,7 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
 
 
-        public TaskRE Task { get; private set; }
+        public TaskRegistryEntry Task { get; private set; }
         public int ID { get; private set; }
 
         public State State
@@ -50,14 +50,14 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             ++counter;
         }
 
-        public void Invoke(TaskRE task)
+        public void Invoke(TaskRegistryEntry task)
         {
             /*var mre = new ManualResetEvent(false);
             mre.WaitOne();
 
             // полезная логика
 
-            mre.Reset();
+            mre.EmptyTask();
 
 
             // манагере:
@@ -77,7 +77,128 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             );
             _thread.Start();
 
+        }
+    }
 
+    public class IkThreadManager
+    {
+        private readonly Thread[] _threads;
+        private readonly OptionalValue<TaskRegistryEntry>[] _data;
+        private readonly bool[] _stopFlags;
+
+        public event EventHandler ThreadAvailable;
+
+        public IkThreadManager(int threadCount)
+        {
+            _data = new OptionalValue<TaskRegistryEntry>[threadCount];
+            for (var i = 0; i < threadCount; i++)
+                _data[i] = new OptionalValue<TaskRegistryEntry>();
+
+            _threads = new Thread[threadCount];
+            for (var i = 0; i < threadCount; i++)
+            {
+                _threads[i] = new Thread(id => ThreadWorker((int)id));
+            }
+
+            _stopFlags = new bool[threadCount];
+        }
+
+        private void ThreadWorker(int id)
+        {
+            while (true)
+            {
+                var task = _data[id];
+                task.Wait();
+                if (task.ShouldStop) return;
+                
+                if (!task.IsEmpty)
+                {
+                    task.Value.Func.FuncDelegate.DynamicInvoke(task.Value.Arguments);
+                    task.EmptyTask();
+                    if (ThreadAvailable != null)
+                        ThreadAvailable.BeginInvoke(this, new EventArgs(), null, null);
+                    // throw event that there is an empty thread
+                }
+
+            }
+        }
+
+        public void Start()
+        {
+            foreach (var t in _threads)
+            {
+                t.Start();
+            }
+        }
+
+        public void Stop()
+        {
+            for (var i = 0; i < _threads.Length; i++)
+            {
+                _data[i].ShouldStop = true;
+//                _threads[i].Abort();
+            }
+        }
+    }
+
+    internal class OptionalValue<T>
+    {
+        private T _value = default(T);
+        private bool _isEmpty = true;
+        private readonly ManualResetEvent _manualResetEvent;
+        private bool _shouldStop = false;
+
+        public OptionalValue()
+        {
+            _manualResetEvent = new ManualResetEvent(false);
+        }
+
+        public OptionalValue(T value) : this()
+        {
+            _value = value;
+        }
+
+        public T Value
+        {
+            get
+            {
+                if (_isEmpty)
+                    throw new ArgumentException("Value is not given");
+                else
+                    return _value;
+            }
+            set
+            {
+                _value = value;
+                _isEmpty = false;
+                _manualResetEvent.Set();
+            }
+        }
+
+        public bool IsEmpty
+        {
+            get { return _isEmpty; }
+        }
+
+        public bool ShouldStop
+        {
+            get { return _shouldStop; }
+            set
+            {
+                _shouldStop = true;
+                _manualResetEvent.Set();
+            }
+        }
+
+        public void EmptyTask()
+        {
+            _isEmpty = true;
+            _manualResetEvent.Reset();
+        }
+
+        public void Wait()
+        {
+            _manualResetEvent.WaitOne();
         }
     }
 }

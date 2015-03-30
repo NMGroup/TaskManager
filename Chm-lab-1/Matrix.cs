@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -100,11 +101,11 @@ namespace Chm_lab_1
 
         public Matrix makeSimetricMatrix()
         {
-            if (!isMatrix() || (!isSquare())) throw new IOException("Invalid type of Matrix.");
-            Matrix returnedMatrix = new Matrix(N,M);
-            for (int i = 0; i < N; ++i)
+            if (!IsMatrix() || (!IsSquare())) throw new IOException("Invalid type of Matrix.");
+            var returnedMatrix = new Matrix(N,M);
+            for (var i = 0; i < N; ++i)
             {
-                for (int j = i; j < M; ++j)
+                for (var j = i; j < M; ++j)
                 {
                     returnedMatrix._matrix[j, i] = _matrix[i, j];
                     if (i != j)
@@ -128,12 +129,12 @@ namespace Chm_lab_1
             return retString;
         }
 
-        public Matrix createCopy()
+        public Matrix CreateCopy()
         {
-            Matrix copiedMatrix = new Matrix(N, M);
-            for (int i = 0; i < N; ++i)
+            var copiedMatrix = new Matrix(N, M);
+            for (var i = 0; i < N; ++i)
             {
-                for (int j = 0; j < M; ++j)
+                for (var j = 0; j < M; ++j)
                 {
                     copiedMatrix._matrix[i, j] = _matrix[i, j];
                 }   
@@ -157,16 +158,16 @@ namespace Chm_lab_1
         }
         
         
-        public Boolean isSquare() { return ( M == N ); }
+        public Boolean IsSquare() { return ( M == N ); }
 
-        public Boolean isMatrix()
+        public Boolean IsMatrix()
         {
             return (this != null)&&(N != 0);
         }
 
-        public void fillOnesDiag()
+        public void FillOnesDiag()
         {
-            if(!isSquare()) throw new IOException("Invalid action.");
+            if(!IsSquare()) throw new IOException("Invalid action.");
 
             for (int i = 0; i < N; ++i)
             {
@@ -182,7 +183,7 @@ namespace Chm_lab_1
 
         public void fillRandom(int absBorder)
         {
-            if (!isMatrix())
+            if (!IsMatrix())
             {
                 throw new IOException("Rounded part and decimal part must be less than 100 000 000.");
             }
@@ -201,7 +202,7 @@ namespace Chm_lab_1
 
         public void round(int decimalNumber)
         {
-            if (!isMatrix()) throw new IOException("Is not Matrix.");
+            if (!IsMatrix()) throw new IOException("Is not Matrix.");
 
             for (int i = 0; i < N; ++i)
             {
@@ -213,12 +214,12 @@ namespace Chm_lab_1
 
         }
 
-        public Matrix getRowMatrix(int numberOfRow)
+        public Matrix GetRowMatrix(int rowIndex)
         {
-            Matrix returnedRow = new Matrix(1, M);
-            for (int i = 0; i < M; ++i)
+            var returnedRow = new Matrix(1, M);
+            for (var i = 0; i < M; ++i)
             {
-                returnedRow._matrix[0, i] = _matrix[numberOfRow, i];
+                returnedRow._matrix[0, i] = _matrix[rowIndex, i];
             }
             return returnedRow;
         }
@@ -234,7 +235,7 @@ namespace Chm_lab_1
 
         public static Matrix multiply (Matrix matrix1, Matrix matrix2)
         {
-            if ( !matrix1.isMatrix() || !matrix2.isMatrix() ) throw new IOException("Are not Matrix.");
+            if ( !matrix1.IsMatrix() || !matrix2.IsMatrix() ) throw new IOException("Are not Matrix.");
 
             int width1 = matrix1.M;
             int width2 = matrix2.M;
@@ -263,7 +264,7 @@ namespace Chm_lab_1
 
         public Matrix createSubMatrix(int delRow, int delColumn)
         {
-            if (!isMatrix() || (delRow*delColumn < 0) || (delRow>N) || (delColumn>M) ) throw new IOException("Invalid action.");
+            if (!IsMatrix() || (delRow*delColumn < 0) || (delRow>N) || (delColumn>M) ) throw new IOException("Invalid action.");
         
             Matrix returnedMatrix = new Matrix(N-1,M-1);
             int x = -1;
@@ -285,7 +286,7 @@ namespace Chm_lab_1
 
         public Matrix transparent()
         {
-            if ( !isMatrix() ) throw new IOException("Is not Matrix.");
+            if ( !IsMatrix() ) throw new IOException("Is not Matrix.");
         
             Matrix returnedMatrix = new Matrix(M,N);
             for ( int i = 0; i < N; ++i )
@@ -300,7 +301,7 @@ namespace Chm_lab_1
 
         public double determinant()
         {
-            if (!isMatrix() || !isSquare()) throw new IOException("Invalid action.");
+            if (!IsMatrix() || !IsSquare()) throw new IOException("Invalid action.");
             if (M == 1)
             {
                 return _matrix[0,0];
@@ -323,33 +324,31 @@ namespace Chm_lab_1
 
         public Matrix cofactor()
         {
-            if (!isMatrix()) throw new IOException("Is not Matrix.");
+            if (!IsMatrix()) throw new IOException("Is not Matrix.");
 
-            Matrix returnedMatrix = new Matrix(N, M);
-            int signI;
-            int signJ;
+            var returnedMatrix = new Matrix(N, M);
             for ( int i = 0; i < N; ++i )
             {
                 for ( int j = 0; j < M; ++j)
                 {
-                    signI = (i%2 == 0) ? 1 : -1;
-                    signJ = (j%2 == 0) ? 1 : -1;
+                    var signI = (i%2 == 0) ? 1 : -1;
+                    int signJ = (j%2 == 0) ? 1 : -1;
                     returnedMatrix._matrix[i, j] = signI * signJ * createSubMatrix(i, j).determinant();
                 }
             }
             return returnedMatrix;
         }
 
-        public Matrix inverse()
+        public Matrix Invert()
         {
-            if (!isMatrix()) throw new IOException("Is not Matrix.");
-            double myConst = (1.0/determinant());
-            int width = M;
-            int height = N;
-            Matrix returnedMatrix = new Matrix(height,width);
+            if (!IsMatrix()) throw new IOException("Is not Matrix.");
+            var myConst = (1.0/determinant());
+            var width = M;
+            var height = N;
+            var returnedMatrix = new Matrix(height,width);
 
-            Matrix cofactorMatrix = this.cofactor();
-            for ( int i = 0; i < height; ++i)
+            var cofactorMatrix = this.cofactor();
+            for ( var i = 0; i < height; ++i)
             {
                 if (Math.Abs(determinant()) < 0.00000001) throw new IOException("Determinant is about null");
                 if (( width == 1) && ( height == 1))
@@ -357,7 +356,7 @@ namespace Chm_lab_1
                     returnedMatrix._matrix[0, 0] = myConst;
                     break;
                 }
-                for ( int j = 0; j < width; ++j)
+                for ( var j = 0; j < width; ++j)
                 {
                     returnedMatrix._matrix[i, j] = myConst * cofactorMatrix._matrix[j, i];
                 }
@@ -366,13 +365,11 @@ namespace Chm_lab_1
             return returnedMatrix;
         }
 
-        private double getNorm()
+        private double GetNorm()
         {
-            if (!isMatrix()) throw new IOException("Is not Matrix.");
-        
-            double returnedNorm;
+            if (!IsMatrix()) throw new IOException("Is not Matrix.");
 
-            double[] arrayOfSum = new double[N];
+            var arrayOfSum = new double[N];
 
             for ( int i = 0; i < N; ++i )
             {
@@ -382,7 +379,7 @@ namespace Chm_lab_1
                 }
             }
 
-            returnedNorm = arrayOfSum[0];
+            var returnedNorm = arrayOfSum[0];
 
             for ( int i = 1; i < arrayOfSum.Length; ++i )
             {
@@ -393,10 +390,10 @@ namespace Chm_lab_1
             return returnedNorm;
         }
 
-        public double matrixDependent()
+        public double MatrixDependent()
         {
-            if (!isMatrix()) throw new IOException("Is not Matrix");
-            return getNorm() * this.inverse().getNorm();
+            if (!IsMatrix()) throw new IOException("Is not Matrix");
+            return GetNorm() * this.Invert().GetNorm();
         }
 
 
@@ -404,36 +401,39 @@ namespace Chm_lab_1
         {
             var returnedMatrix = new Matrix(matrix2.N,matrix1.M);
 
-            var tasklist = new List<TaskRE>();
+            var tasklist = new List<TaskRegistryEntry>();
 
-            TaskRE task;
-            TaskQueue tq = new TaskQueue();
-            int i;
-            for (i = 0; i < matrix1.N; ++i)
+            var tq = new TaskQueue();
+            var sw = Stopwatch.StartNew();
+            for (var i = 0; i < matrix1.N; ++i)
             {
-                
-                task = new TaskRE(
-                    "ParralelMatrixMultiply", 
-                    arguments: new Object[]{matrix1.getRowMatrix(i), matrix2}, 
-                    dlgt: new Func<Matrix,Matrix,Matrix>((Matrix m1, Matrix m2) =>
-                    {
-                        var returnedRow = Matrix.multiply(m1, m2);
-                        return returnedRow;
-                    })
-                );
+
+                var task = new TaskRegistryEntry(
+                    "ParralelMatrixMultiply",
+                    arguments: new Object[] {matrix1.GetRowMatrix(i), matrix2},
+                    dlgt: new Func<Matrix, Matrix, Matrix>(Matrix.multiply)
+                    );
                 tq.AddTask(task);
                 tasklist.Add(task);
             }
+            sw.Stop();
+            Console.WriteLine("Creating subtasks: {0} ms", sw.Elapsed.TotalMilliseconds);
 
-            foreach (TaskRE t in tasklist)
+            sw.Restart();
+            foreach (var t in tasklist)
             {
                 t.w81();
             }
+            sw.Stop();
+            Console.WriteLine("tasks evaluated: {0} ms", sw.Elapsed.TotalMilliseconds);
 
-            for(i=0; i<returnedMatrix.N; ++i)
+            sw.Restart();
+            for (var i = 0; i < returnedMatrix.N; ++i)
             {
                 returnedMatrix.setRowMatrix((Matrix) tasklist[i].ResultValue.Value, i);
             }
+            sw.Stop();
+            Console.WriteLine("building up the resulting matrix: {0} ms", sw.Elapsed.TotalMilliseconds);
 
             return returnedMatrix;
         }

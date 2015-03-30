@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.SqlClient;
@@ -12,13 +13,13 @@ namespace Mephi.Cybernetics.Nm.TaskManager
     public class TaskQueue
     {
         /// <summary> Невыполненые задания </summary>
-        private ObservableCollection<TaskRE> _pendingTaskList;
+        private ConcurrentQueue<TaskRegistryEntry> _pendingTaskList;
         /// <summary> Выполненые задания </summary>
-        private ObservableCollection<TaskRE> _completedTaskList;
+        private ConcurrentQueue<TaskRegistryEntry> _completedTaskList;
 
         private ThreadManager _threadManager;
 
-        public bool TryGetTask(out TaskRE task)
+        public bool TryGetTask(out TaskRegistryEntry task)
         {
             lock (_pendingTaskList)
             {
@@ -37,26 +38,23 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             }
         }
 
-        public void AddTask(TaskRE task)
+        public void AddTask(TaskRegistryEntry task)
         {
-            //if (!IsTaskDone(task))
             lock (_pendingTaskList)
             {
                 _pendingTaskList.Add(task);
             }
-
-        }
-
-        public void OnPendingCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            TaskRE t = null;
+            TaskRegistryEntry t = null;
             if (TryGetTask(out t))
                 _threadManager.TryGetThread(t);
         }
 
-        public void OnCompletedCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void AddToComplete(TaskRegistryEntry task)
         {
-            TaskRE t = null;
+            lock(_completedTaskList)
+            _completedTaskList.Add(task);
+
+            TaskRegistryEntry t = null;
             if (TryGetTask(out t))
                 _threadManager.TryGetThread(t);
         }
@@ -64,27 +62,23 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
         public TaskQueue()
         {
-            _pendingTaskList = new ObservableCollection<TaskRE>();
-            _completedTaskList = new ObservableCollection<TaskRE>();
+            _pendingTaskList = new ObservableCollection<TaskRegistryEntry>();
+            _completedTaskList = new ObservableCollection<TaskRegistryEntry>();
             _threadManager = new ThreadManager();
 
-            _pendingTaskList.CollectionChanged += this.OnPendingCollectionChanged;
-            _completedTaskList.CollectionChanged += this.OnCompletedCollectionChanged;
             _threadManager.CurrentTaskList.CollectionChanged += CurrentTaskListOnCollectionChanged;
         }
 
         private void CurrentTaskListOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            lock (_completedTaskList)
+            if (e.OldItems != null)
             {
-                if (e.OldItems != null)
+                foreach (TaskRegistryEntry task in e.OldItems)
                 {
-                    foreach (TaskRE task in e.OldItems)
-                    {
-                        _completedTaskList.Add(task);
-                    }
+                    AddToComplete(task);
                 }
             }
+            
         }
 
         /*public bool IsTaskDone(TaskRE task)

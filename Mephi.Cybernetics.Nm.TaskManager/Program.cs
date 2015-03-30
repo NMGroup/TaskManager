@@ -16,14 +16,14 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             int p = 1;
             int o = 1;
             TaskQueue tq = new TaskQueue();
-            TaskRE zTaskRe = new TaskRE(name:String.Format("task1"), arguments: new object[]{p,o}, 
+            TaskRegistryEntry zTaskRe = new TaskRegistryEntry(name:String.Format("task1"), arguments: new object[]{p,o}, 
             dlgt: new Func<int,int, int>((int k,int l) => 
             {
 
                 return k+l;
             }));
             Console.WriteLine("end");
-            TaskRE checkAction = new TaskRE(
+            TaskRegistryEntry checkAction = new TaskRegistryEntry(
                name: String.Format("taskAction"),
                arguments: new object[]{p},
                dlgt: new Action<int>((int k) =>
@@ -39,7 +39,7 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             var j = zTaskRe.ResultValue.Value;
             Console.WriteLine(j);
 
-            TaskRE yTaskRe = new TaskRE(String.Format("task1"), arguments: new object[] { p, o },
+            TaskRegistryEntry yTaskRe = new TaskRegistryEntry(String.Format("task1"), arguments: new object[] { p, o },
             dlgt: new Func<int, int, int>((int k, int l) =>
             {
 

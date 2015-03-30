@@ -64,7 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultValue.cs" />
     <Compile Include="TaskQueue.cs" />
-    <Compile Include="TaskRE.cs" />
+    <Compile Include="TaskRegistryEntry.cs" />
     <Compile Include="ThreadForTM.cs" />
     <Compile Include="ThreadManager.cs" />
   </ItemGroup>

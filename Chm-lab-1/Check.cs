@@ -16,24 +16,24 @@ namespace Chm_lab_1
         
         static void Main(string[] args)
         {
-            Matrix m1 = new Matrix(50,50);
+            Matrix m1 = new Matrix(2000,2000);
             m1.fillRandom();
-            Matrix m2 = new Matrix(50, 50);
+            Matrix m2 = new Matrix(2000, 2000);
             m2.fillRandom();
 
 
-            var sw = Stopwatch.StartNew();
+/*            var sw = Stopwatch.StartNew();
             Matrix mult1 = Matrix.multiply(m1,m2);
             sw.Stop();
-            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+            Console.WriteLine(sw.Elapsed.TotalMilliseconds);*/
 
             var sw2 = Stopwatch.StartNew();
             Matrix mult2 = Matrix.ParralelMatrixMultiply(m1, m2);
             sw2.Stop();
             Console.WriteLine(sw2.Elapsed.TotalMilliseconds);
 
-/*            ExcelWorker.ExcelCreator(mult1, "mult1");
-            ExcelWorker.ExcelCreator(mult2, "mult2");*/
+//            ExcelWorker.ExcelCreator(mult1, "mult1");
+            ExcelWorker.ExcelCreator(mult2, "mult2");
             Console.ReadLine();
 
             /*Matrix m1 = new Matrix(10,10);

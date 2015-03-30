@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Mephi.Cybernetics.Nm.TaskManager
 {
-    public class TaskRE
+    public class TaskRegistryEntry
     {
         private object[] _arguments;
         private ResultValue _resultValue;
@@ -36,7 +36,7 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
         #region Ctor
 
-        public TaskRE(string name, object[] arguments, Delegate dlgt)
+        public TaskRegistryEntry(string name, object[] arguments, Delegate dlgt)
         {
             Name = name;
             _arguments = arguments;

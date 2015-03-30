@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -11,16 +12,16 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 {
     class ThreadManager
     {
-        private ObservableCollection<TaskRE> _currentTaskList;
+        private ObservableCollection<TaskRegistryEntry> _currentTaskList;
 
-        private ObservableCollection<ThreadForTM> _busyThreads;
-        private ObservableCollection<ThreadForTM> _freeThreads;
+        private BlockingCollection<ThreadForTM> _busyThreads;
+        private BlockingCollection<ThreadForTM> _freeThreads;
 
         private ManualResetEvent _busyThreadManagerIndicator = new ManualResetEvent(true);
 
         const int quantityOfThreads = 50;
 
-        public ObservableCollection<TaskRE> CurrentTaskList
+        public ObservableCollection<TaskRegistryEntry> CurrentTaskList
         {
             get
             {
@@ -28,16 +29,13 @@ namespace Mephi.Cybernetics.Nm.TaskManager
             }
         }
 
-
         #region Ctor
-
-
 
         public ThreadManager()
         {
-            _currentTaskList = new ObservableCollection<TaskRE>();
-            _busyThreads = new ObservableCollection<ThreadForTM>();
-            _freeThreads = new ObservableCollection<ThreadForTM>();   
+            _currentTaskList = new ObservableCollection<TaskRegistryEntry>();
+            _busyThreads = new BlockingCollection<ThreadForTM>();
+            _freeThreads = new BlockingCollection<ThreadForTM>();   
 
             for (int i = 0; i < quantityOfThreads; ++i)
             {
@@ -50,37 +48,41 @@ namespace Mephi.Cybernetics.Nm.TaskManager
 
         #endregion
 
-        public bool TryGetThread( TaskRE task )
+        public bool TryGetThread( TaskRegistryEntry task )
         {
-            _busyThreadManagerIndicator.WaitOne();
-            _busyThreadManagerIndicator.Reset();
-            if (_freeThreads.Count != 0)
+            lock (_freeThreads)
             {
-                ThreadForTM freeThread = _freeThreads[0];
-                _currentTaskList.Add(task);
-                _busyThreads.Add(freeThread);
-                _freeThreads.Remove(freeThread);
-                freeThread.Invoke(task);
-                _busyThreadManagerIndicator.Set();
-                return true;
+                if (_freeThreads.Count != 0)
+                {
+                    ThreadForTM freeThread = _freeThreads[0];
+                    _currentTaskList.Add(task);
+                    _freeThreads.TryTake(out freeThread);
+                    lock (_busyThreads)
+                    {
+                        _busyThreads.Add(freeThread);
+                    }
+                    freeThread.Invoke(task);
+                    return true;
+                }
             }
-            _busyThreadManagerIndicator.Set();
-            return false;
-            
+            return false;       
         }
+
+        private object syncThreadAccess = new object();
 
         private void OnStateThreadForTMCHanged(ThreadForTM e)
         {
-            _busyThreadManagerIndicator.WaitOne();
-            _busyThreadManagerIndicator.Reset();
-            if (e.State == State.Done)
+            lock (_busyThreads)
+                lock (_freeThreads)
             {
-                _busyThreads.Remove(e);
-                _freeThreads.Add(e);
-                _currentTaskList.Remove(e.Task);
-                Console.WriteLine("я готов");
+                if (e.State == State.Done)
+                {
+                    _busyThreads.Remove(e);
+                    _freeThreads.Add(e);
+                    _currentTaskList.Remove(e.Task);
+                }
+
             }
-            _busyThreadManagerIndicator.Set();
         }
 
     }
